@@ -1,0 +1,194 @@
+import random
+import time
+import threading
+
+calidades = ["Especial", "Superespecial", "Épico", "Mítico", "Legendario"]
+
+probabilidades_mejora = {
+    "Especial": 50,
+    "Superespecial": 28,
+    "Épico": 15,
+    "Mítico": 5,
+    "Legendario": 2
+}
+
+recompensas = {
+    "Especial": [
+        ("50 Monedas", 41.90),
+        ("25 Puntos de Fuerza", 32.60),
+        ("100 Duplicadores de XP", 20.90),
+        ("20 Blines", 2.30),
+        ("10 Créditos", 2.30)
+    ],
+    "Superespecial": [
+        ("100 Monedas", 42.38),
+        ("50 Puntos de Fuerza", 33.11),
+        ("200 Duplicadores de XP", 13.25),
+        ("30 Créditos", 3.31),
+        ("50 Blines", 3.31),
+        ("Pin", 3.31),
+        ("Spray", 1.32)
+    ],
+    "Épico": [
+        ("100 Monedas", 30.00),
+        ("50 Puntos de Fuerza", 30.00),
+        ("200 Duplicadores de XP", 30.00),
+        ("50 Blines", 5.00),
+        ("20 Créditos", 5.00)
+    ],
+    "Mítico": [
+        ("200 Monedas", 20.00),
+        ("100 Puntos de Fuerza", 25.00),
+        ("500 Duplicadores de XP", 40.00),
+        ("100 Blines", 5.00),
+        ("50 Créditos", 10.00)
+    ],
+    "Legendario": [
+        ("500 Monedas", 10.00),
+        ("200 Puntos de Fuerza", 25.00),
+        ("1000 Duplicadores de XP", 50.00),
+        ("200 Blines", 10.00),
+        ("100 Créditos", 5.00)
+    ]
+}
+
+personajes = [
+    "Shelly", "Nita", "Colt", "Bull", "Brock", "El Primo", "Barley", "Poco", "Rosa",
+    "Jessie", "Dynamike", "Tick", "8-Bit", "Rico", "Darryl", "Penny", "Carl", "Jacky",
+    "Piper", "Pam", "Frank", "Bibi", "Bea", "Nani", "Edgar", "Griff", "Grom", "Bonnie",
+    "Ash", "Lola", "Fang", "Eve", "Janet", "Sam", "Gus", "Buster", "Mandy", "RT", "Willow",
+    "Hank", "Maisie", "Cordelius", "Doug"
+]
+spray = [
+    "Todo va bien", "Nube furiosa", "Gema malota", "Plátano", "Máscara de lágrimas", "Premio",
+    "Pisada", "Corazón atravesado", "Agujero", "Sal", "Campeón calavera", "Señal de peligro",
+    "Calavera alada", "Pulgar hacia arriba", "8-BIT 1", "Bo 1", "Brock 1", "Bull 1", "Colt 1", "Dynamike 1",
+    "Emz 1", "Jessie 1", "Nita 1", "Stu 1", "Tick 1", "Señor P Semana dorada", "Tara Ramadán",
+    "El Primo 1", "Rosa 1", "Poco 1", "Barley 1", "Rico 1", "Darryl 1", "Jacky 1", "Penny 1", "Carl 1",
+    "Bea 1", "Bibi 1", "Bonnie 1", "Edgar 1", "Frank 1", "Grom 1", "Nani 1", "Pam 1", "Piper 1",
+    "Griff 1", "Mortis 1", "Sprout 1", "Señor P 1", "Byron 1", "Max 1", "Tara 1", "Squeak 1",
+    "Genio 1", "Amber 1", "Crow 1", "Meg 1", "Leon 1", "Chester 1", "Sandy 1", "Spike 1",
+    "Puño eSports de 2022", "Gray 1", "R-T 1", "Willow 1", "Máscara de Otis", "Máscara de Lola",
+    "Máscara de Dynamike", "Nani de Pascua", "Alfombra de Carl", "Ruffs 1", "Belle 1", "Buzz 1",
+    "Buster 1", "Colette 1", "Eve 1", "Fang 1", "Gale 1", "Janet 1", "Lola 1", "Lou 1", "Mandy 1",
+    "Otis 1", "Sam 1", "Surge 1", "Ash 1", "Gus 1", "Maisie 1", "Teniente gamba 1", "8-BIT encantado",
+    "Janet encantada", "Chester encantado", "Lou encantado", "Surge maldito", "Griff maldito",
+    "Doug", "Cordelius", "Cordelius Tierra baldía", "Willow Tierra baldía", "Mandy de la cosecha",
+    "Rosa universitaria", "Squeak universitario", "Pearl", "Chuck", "Charlie", "Mico", "Kit", "Larry y Lawrie",
+    "Angelo", "Melodie", "Lily", "Draco", "Berry", "Clancy", "Shelly 1", "BSC", "Denegado", "Max selvático",
+    "Buster selvático", "Emz Semana dorada", "Colt selvático", "Amor ardiente"
+]
+
+registro_recompensas = {}
+
+def obtener_recompensa(calidad):
+    if calidad == "Superespecial":
+        opciones = recompensas["Superespecial"]
+        nombres, probabilidades = zip(*opciones)
+        recompensa = random.choices(nombres, probabilidades, k=1)[0]
+
+        if recompensa == "Pin":
+            personaje = random.choice(personajes)
+            emocion = random.choice(["Feliz", "Triste", "Enfadado"])
+            return f"Pin de {personaje} {emocion}"
+
+        if recompensa == "Spray":
+            spray_seleccionado = random.choice(spray)
+            return f"Spray: {spray_seleccionado}"
+
+        return recompensa
+    else:
+        opciones = recompensas[calidad]
+        nombres, probabilidades = zip(*opciones)
+        return random.choices(nombres, probabilidades, k=1)[0]
+
+def mejorar_calidad(calidad_actual):
+    if calidad_actual == "Legendario":
+        return calidad_actual 
+    indice_actual = calidades.index(calidad_actual)
+    probabilidad = probabilidades_mejora[calidad_actual]
+    if random.randint(1, 100) <= probabilidad:
+        return calidades[indice_actual + 1]
+    return calidad_actual
+
+def registrar_recompensa(recompensa):
+    if recompensa in registro_recompensas:
+        registro_recompensas[recompensa] += 1
+    else:
+        registro_recompensas[recompensa] = 1
+
+def mostrar_registro():
+    print("\n--- Recompensas Obtenidas ---")
+    for recompensa, cantidad in registro_recompensas.items():
+        print(f"{recompensa}: {cantidad}")
+    print("----------------------------\n")
+
+def esperar_input_con_tiempo(mensaje, opciones=None, funcion_terminar=None):
+    intentos = 0
+    timer = threading.Timer(10.0, funcion_terminar) if funcion_terminar else None
+    timer.start() if timer else None
+    
+    while intentos < 2:
+        try:
+            respuesta = input(mensaje).lower()
+            if opciones:
+                if respuesta in opciones:
+                    if timer:
+                        timer.cancel()
+                    return respuesta
+            else:
+                if respuesta == "":
+                    if timer:
+                        timer.cancel()
+                    return respuesta
+            print("Respuesta no válida. Intento nuevamente.")
+            intentos += 1
+        except:
+            pass
+
+    if timer:
+        timer.cancel()
+    print("\n¡Tiempo agotado o demasiados intentos fallidos!")
+    funcion_terminar()
+
+def terminar_juego():
+    print("\n¡El juego ha terminado!")
+    exit()
+
+def jugar():
+    print("¡Bienvenido al juego de Probabilidades de Starr Drops de Brawl Stars!")
+    print("Tendrás 4 toques para mejorar la calidad. En el cuarto toque se revelará la calidad final, y en el quinto toque recibirás la recompensa.")
+    
+    while True:
+        calidad_actual = "Especial"
+        print("\nAbriendo un nuevo Starr Drop...")
+        toques_restantes = 4
+
+        while toques_restantes > 1:
+            print(f"Tienes {toques_restantes} toques restantes. Presiona Enter para intentar mejorar la calidad...")
+            esperar_input_con_tiempo("Presiona Enter para continuar...", funcion_terminar=terminar_juego)
+            calidad_actual = mejorar_calidad(calidad_actual)
+            print(f"Calidad actual: {calidad_actual}")
+            toques_restantes -= 1
+
+        print("\nEste es tu último intento de mejorar la calidad. Presiona Enter...")
+        esperar_input_con_tiempo("Presiona Enter para continuar...", funcion_terminar=terminar_juego)
+        calidad_actual = mejorar_calidad(calidad_actual)
+        print(f"\nCalidad final: {calidad_actual}")
+
+        print("\nPresiona Enter para revelar tu recompensa...")
+        esperar_input_con_tiempo("Presiona Enter para continuar...", funcion_terminar=terminar_juego)
+        recompensa = obtener_recompensa(calidad_actual)
+        registrar_recompensa(recompensa)
+        print(f"\n¡Has obtenido: {recompensa} con calidad {calidad_actual}!")
+
+        consulta = esperar_input_con_tiempo("\n¿Deseas ver el registro de recompensas? (s/n): ", opciones=['s', 'n'], funcion_terminar=terminar_juego)
+        if consulta == "s":
+            mostrar_registro()
+
+        continuar = esperar_input_con_tiempo("¿Quieres abrir otro Starr Drop? (s/n): ", opciones=['s', 'n'], funcion_terminar=terminar_juego)
+        if continuar != "s":
+            print("\n¡Gracias por jugar al juego de Starr Drops! ¡Hasta la próxima!")
+            break
+
+jugar()
