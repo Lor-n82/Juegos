@@ -130,7 +130,7 @@ def esperar_input_con_tiempo(mensaje, opciones=None, funcion_terminar=None):
     
     while intentos < 2:
         try:
-            respuesta = input(mensaje).lower()
+            respuesta = input(mensaje.lower())
             if opciones:
                 if respuesta in opciones:
                     if timer:
