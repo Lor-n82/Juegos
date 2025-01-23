@@ -1,0 +1,184 @@
+import java.util.*;
+
+public class StarrDropGame {
+
+    private static final List<String> calidades = Arrays.asList("Especial", "Superespecial", "Épico", "Mítico", "Legendario");
+
+    private static final Map<String, Integer> probabilidadesMejora = new HashMap<>();
+    private static final Map<String, List<Reward>> recompensas = new HashMap<>();
+    private static final List<String> personajes = Arrays.asList(
+            "Shelly", "Nita", "Colt", "Bull", "Brock", "El Primo", "Barley", "Poco", "Rosa", "Jessie", "Dynamike",
+            "Tick", "8-Bit", "Rico", "Darryl", "Penny", "Carl", "Jacky", "Piper", "Pam", "Frank", "Bibi", "Bea",
+            "Nani", "Edgar", "Griff", "Grom", "Bonnie", "Ash", "Lola", "Fang", "Eve", "Janet", "Sam", "Gus", "Buster",
+            "Mandy", "RT", "Willow", "Hank", "Maisie", "Cordelius", "Doug");
+
+    private static final List<String> spray = Arrays.asList(
+            "Todo va bien", "Nube furiosa", "Gema malota", "Plátano", "Máscara de lágrimas", "Premio", "Pisada",
+            "Corazón atravesado", "Agujero", "Sal", "Campeón calavera", "Señal de peligro", "Calavera alada", "Pulgar hacia arriba",
+            "8-BIT 1", "Bo 1", "Brock 1", "Bull 1", "Colt 1", "Dynamike 1", "Emz 1", "Jessie 1", "Nita 1", "Stu 1", "Tick 1",
+            "Señor P Semana dorada", "Tara Ramadán", "El Primo 1", "Rosa 1", "Poco 1", "Barley 1", "Rico 1", "Darryl 1", "Jacky 1",
+            "Penny 1", "Carl 1", "Bea 1", "Bibi 1", "Bonnie 1", "Edgar 1", "Frank 1", "Grom 1", "Nani 1", "Pam 1", "Piper 1",
+            "Griff 1", "Mortis 1", "Sprout 1", "Señor P 1", "Byron 1", "Max 1", "Tara 1", "Squeak 1", "Genio 1", "Amber 1", "Crow 1",
+            "Meg 1", "Leon 1", "Chester 1", "Sandy 1", "Spike 1", "Puño eSports de 2022", "Gray 1", "R-T 1", "Willow 1",
+            "Máscara de Otis", "Máscara de Lola", "Máscara de Dynamike", "Nani de Pascua", "Alfombra de Carl", "Ruffs 1",
+            "Belle 1", "Buzz 1", "Buster 1", "Colette 1", "Eve 1", "Fang 1", "Gale 1", "Janet 1", "Lola 1", "Lou 1", "Mandy 1",
+            "Otis 1", "Sam 1", "Surge 1", "Ash 1", "Gus 1", "Maisie 1", "Teniente gamba 1", "8-BIT encantado", "Janet encantada",
+            "Chester encantado", "Lou encantado", "Surge maldito", "Griff maldito", "Doug", "Cordelius", "Cordelius Tierra baldía",
+            "Willow Tierra baldía", "Mandy de la cosecha", "Rosa universitaria", "Squeak universitario", "Pearl", "Chuck", "Charlie",
+            "Mico", "Kit", "Larry y Lawrie", "Angelo", "Melodie", "Lily", "Draco", "Berry", "Clancy", "Shelly 1", "BSC", "Denegado",
+            "Max selvático", "Buster selvático", "Emz Semana dorada", "Colt selvático", "Amor ardiente");
+
+    private static final Map<String, Integer> registroRecompensas = new HashMap<>();
+
+    static {
+        probabilidadesMejora.put("Especial", 50);
+        probabilidadesMejora.put("Superespecial", 28);
+        probabilidadesMejora.put("Épico", 15);
+        probabilidadesMejora.put("Mítico", 5);
+        probabilidadesMejora.put("Legendario", 2);
+
+        recompensas.put("Especial", Arrays.asList(
+                new Reward("50 Monedas", 41.90),
+                new Reward("25 Puntos de Fuerza", 32.60),
+                new Reward("100 Duplicadores de XP", 20.90),
+                new Reward("20 Blines", 2.30),
+                new Reward("10 Créditos", 2.30)
+        ));
+        recompensas.put("Superespecial", Arrays.asList(
+                new Reward("100 Monedas", 42.38),
+                new Reward("50 Puntos de Fuerza", 33.11),
+                new Reward("200 Duplicadores de XP", 13.25),
+                new Reward("30 Créditos", 3.31),
+                new Reward("50 Blines", 3.31),
+                new Reward("Pin", 3.31),
+                new Reward("Spray", 1.32)
+        ));
+        recompensas.put("Épico", Arrays.asList(
+                new Reward("100 Monedas", 30.00),
+                new Reward("50 Puntos de Fuerza", 30.00),
+                new Reward("200 Duplicadores de XP", 30.00),
+                new Reward("50 Blines", 5.00),
+                new Reward("20 Créditos", 5.00)
+        ));
+        recompensas.put("Mítico", Arrays.asList(
+                new Reward("200 Monedas", 20.00),
+                new Reward("100 Puntos de Fuerza", 25.00),
+                new Reward("500 Duplicadores de XP", 40.00),
+                new Reward("100 Blines", 5.00),
+                new Reward("50 Créditos", 10.00)
+        ));
+        recompensas.put("Legendario", Arrays.asList(
+                new Reward("500 Monedas", 10.00),
+                new Reward("200 Puntos de Fuerza", 25.00),
+                new Reward("1000 Duplicadores de XP", 50.00),
+                new Reward("200 Blines", 10.00),
+                new Reward("100 Créditos", 5.00)
+        ));
+    }
+
+    private static String mejorarCalidad(String calidadActual) {
+        if ("Legendario".equals(calidadActual)) {
+            return calidadActual;
+        }
+        int indiceActual = calidades.indexOf(calidadActual);
+        int probabilidad = probabilidadesMejora.get(calidadActual);
+        if (new Random().nextInt(100) < probabilidad) {
+            return calidades.get(indiceActual + 1);
+        }
+        return calidadActual;
+    }
+
+    private static String obtenerRecompensa(String calidad) {
+        List<Reward> opciones = recompensas.get(calidad);
+        double totalProbabilidad = opciones.stream().mapToDouble(r -> r.probabilidad).sum();
+        double randomValue = new Random().nextDouble() * totalProbabilidad;
+
+        for (Reward recompensa : opciones) {
+            randomValue -= recompensa.probabilidad;
+            if (randomValue <= 0) {
+                if ("Pin".equals(recompensa.nombre)) {
+                    String personaje = personajes.get(new Random().nextInt(personajes.size()));
+                    String emocion = new Random().nextBoolean() ? "Feliz" : "Triste";
+                    return "Pin de " + personaje + " " + emocion;
+                }
+                if ("Spray".equals(recompensa.nombre)) {
+                    String spraySeleccionado = spray.get(new Random().nextInt(spray.size()));
+                    return "Spray: " + spraySeleccionado;
+                }
+                return recompensa.nombre;
+            }
+        }
+        return "";
+    }
+
+    private static void registrarRecompensa(String recompensa) {
+        registroRecompensas.put(recompensa, registroRecompensas.getOrDefault(recompensa, 0) + 1);
+    }
+
+    private static void mostrarRegistro() {
+        System.out.println("\n--- Recompensas Obtenidas ---");
+        registroRecompensas.forEach((recompensa, cantidad) -> {
+            System.out.println(recompensa + ": " + cantidad);
+        });
+        System.out.println("----------------------------\n");
+    }
+
+    private static void jugar() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("¡Bienvenido al juego de Probabilidades de Starr Drops de Brawl Stars!");
+        System.out.println("Tendrás 4 toques para mejorar la calidad. En el cuarto toque se revelará la calidad final, y en el quinto toque recibirás la recompensa.");
+
+        while (true) {
+            String calidadActual = "Especial";
+            System.out.println("\nAbriendo un nuevo Starr Drop...");
+            int toquesRestantes = 4;
+
+            while (toquesRestantes > 1) {
+                System.out.println("Tienes " + toquesRestantes + " toques restantes. Presiona Enter para intentar mejorar la calidad...");
+                scanner.nextLine(); // Esperar que el jugador presione Enter
+                calidadActual = mejorarCalidad(calidadActual);
+                System.out.println("Calidad actual: " + calidadActual);
+                toquesRestantes--;
+            }
+
+            System.out.println("\nEste es tu último intento de mejorar la calidad. Presiona Enter...");
+            scanner.nextLine(); // Esperar que el jugador presione Enter
+            calidadActual = mejorarCalidad(calidadActual);
+            System.out.println("\nCalidad final: " + calidadActual);
+
+            System.out.println("\nPresiona Enter para revelar tu recompensa...");
+            scanner.nextLine(); // Esperar que el jugador presione Enter
+            String recompensa = obtenerRecompensa(calidadActual);
+            registrarRecompensa(recompensa);
+            System.out.println("\n¡Has obtenido: " + recompensa + " con calidad " + calidadActual + "!");
+
+            System.out.println("\n¿Deseas ver el registro de recompensas? (s/n): ");
+            String consulta = scanner.nextLine().toLowerCase();
+            if ("s".equals(consulta)) {
+                mostrarRegistro();
+            }
+
+            System.out.println("\n¿Quieres abrir otro Starr Drop? (s/n): ");
+            String continuar = scanner.nextLine().toLowerCase();
+            if (!"s".equals(continuar)) {
+                System.out.println("\n¡Gracias por jugar al juego de Starr Drops! ¡Hasta la próxima!");
+                break;
+            }
+        }
+        scanner.close();
+    }
+
+    public static void main(String[] args) {
+        jugar();
+    }
+
+    static class Reward {
+        String nombre;
+        double probabilidad;
+
+        Reward(String nombre, double probabilidad) {
+            this.nombre = nombre;
+            this.probabilidad = probabilidad;
+        }
+    }
+}
